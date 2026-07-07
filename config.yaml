@@ -1,0 +1,119 @@
+# Folder that contains videos waiting to upload.
+# Change this to your actual folder path.
+watch_folder: "C:/Videos/to-upload"
+
+# Subfolder inside watch_folder where uploaded files are moved.
+uploaded_subfolder: "uploaded"
+
+# Supported video file extensions (case-insensitive).
+video_extensions:
+  - ".mp4"
+  - ".mov"
+  - ".mkv"
+  - ".webm"
+  - ".avi"
+  - ".m4v"
+
+# Schedule types: daily_times | interval | cron
+schedule:
+  type: daily_times
+  timezone: UTC
+  # 6 uploads/day tuned for US, Canada, UK, Europe, and Australia.
+  times:
+    - "07:00"  # Australia evening, UK/EU morning
+    - "12:00"  # Europe afternoon, US waking up
+    - "15:00"  # US late morning, EU after work
+    - "18:00"  # US afternoon, UK/EU prime time
+    - "21:00"  # US early evening
+    - "00:00"  # US prime evening
+
+  # interval mode (alternative):
+  # type: interval
+  # hours: 1
+  # minutes: 0
+
+  # single cron mode (alternative):
+  # type: cron
+  # cron: "0 9 * * *"
+
+upload:
+  # one = upload oldest pending video per run
+  # all = upload every pending video per run
+  mode: one
+
+  # When the inbox is empty, re-upload old videos from uploaded/ one by one.
+  recycle_uploads: true
+
+  # fifo = inbox first, then recycle; random = pick random video from channel pool
+  pick_strategy: fifo
+
+  # public | unlisted | private
+  privacy: public
+
+  # YouTube category ID (22 = People & Blogs). Full list:
+  # https://developers.google.com/youtube/v3/docs/videoCategories/list
+  category_id: "22"
+
+  # {filename} is replaced with the file name without extension.
+  title_template: "{filename}"
+  description_template: "Uploaded automatically."
+  tags:
+    - auto-upload
+
+  # Optional: path to a .jpg/.png thumbnail next to the video or in watch_folder.
+  # If empty, YouTube picks a frame automatically.
+  thumbnail: ""
+
+# YouTube link download quality (requires ffmpeg).
+# best = highest available | 1080p | 720p
+# cookies_file = optional browser cookies for higher-quality streams (see README)
+download:
+  quality: best
+  cookies_file: ""
+
+# Folder where synced channel/profile videos are stored for random re-upload.
+sources_folder: "C:/Videos/to-upload/sources"
+
+paths:
+  client_secret: "credentials/client_secret.json"
+  token: "credentials/token.json"
+  tiktok_app: "credentials/tiktok_app.json"
+  tiktok_token: "credentials/tiktok_token.json"
+  state_file: "data/uploaded.json"
+  log_file: "logs/bot.log"
+  lock_file: "data/upload.lock"
+
+# Send videos from your phone via Telegram (recommended for mobile uploads).
+telegram:
+  enabled: true
+  bot_token: ""
+  # Your Telegram user ID (only these users can send videos).
+  # Get it from @userinfobot on Telegram, then add it below.
+  allowed_user_ids:
+    - 5252376874
+
+# Multi-platform upload settings.
+# Enable each platform you want. Tokens can also go in .env:
+#   META_ACCESS_TOKEN, TIKTOK_ACCESS_TOKEN
+platforms:
+  youtube:
+    enabled: true
+  instagram:
+    enabled: false
+  facebook:
+    enabled: false
+  tiktok:
+    enabled: true
+    # inbox = draft to TikTok app (easier approval) | direct = post to profile (needs app audit)
+    post_mode: inbox
+    privacy_level: PUBLIC_TO_EVERYONE
+    redirect_uri: "http://127.0.0.1:8765/callback"
+    access_token: ""
+    client_key: ""
+    client_secret: ""
+  meta:
+    access_token: ""
+    instagram_account_id: ""
+    facebook_page_id: ""
+  channel:
+    max_videos_per_channel: 50

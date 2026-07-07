@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+credentials/client_secret.json
+credentials/token.json
+credentials/tiktok_app.json
+credentials/tiktok_token.json
+data/
+logs/
+*.log
+upload.lock
